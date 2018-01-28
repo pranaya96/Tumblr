@@ -14,6 +14,8 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
     @IBOutlet weak var tableView: UITableView!
     var posts: [[String: Any]] = []
     var refreshControl = UIRefreshControl()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -39,7 +41,16 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
         session.configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         let task = session.dataTask(with: url) { (data, response, error) in
             if let error = error {
-                print(error.localizedDescription)
+                let alertController = UIAlertController(title: "Cannot Get Images", message: "The internet connection appears to be offline", preferredStyle: .alert)
+                // create a cancel action
+                let cancelAction = UIAlertAction(title: "Try Again", style: .cancel) { (action) in
+                    self.loadImages()
+                    // handle cancel response here. Doing nothing will dismiss the view.
+                }
+                alertController.addAction(cancelAction)
+                self.present(alertController, animated: true){
+                    
+                }
             } else if let data = data,
                 let dataDictionary = try! JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                 //print(dataDictionary)
