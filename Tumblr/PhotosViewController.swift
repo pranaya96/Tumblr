@@ -13,13 +13,26 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
     
     @IBOutlet weak var tableView: UITableView!
     var posts: [[String: Any]] = []
+    var refreshControl = UIRefreshControl()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.rowHeight = 217
         
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        self.tableView.insertSubview(refreshControl, at: 0)
+        
+        loadImages()
+        // Do any additional setup after loading the view.
+    }
+    
+    @objc func refreshControlAction(_ refreshControl: UIRefreshControl){
+        loadImages()
+        refreshControl.endRefreshing()
+    }
+    
+    func loadImages() {
         // Network request snippet
         let url = URL(string: "https://api.tumblr.com/v2/blog/humansofnewyork.tumblr.com/posts/photo?api_key=Q6vHoaVm5L1u2ZAW1fqv3Jw48gFzYVg9P0vH0VHl3GVy6quoGV")!
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
@@ -37,19 +50,14 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
                 //store the returned array of dictionaries in our posts property
                 self.posts = responseDictionary["posts"] as! [[String:Any]]
                 self.tableView.reloadData()
-                
-                
+               
                 
                 // TODO: Get the posts and store in posts property
                 
-              // TODO: Reload the table view
+                // TODO: Reload the table view
             }
         }
         task.resume()
-        
-      
-
-        // Do any additional setup after loading the view.
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
