@@ -15,7 +15,6 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
     var posts: [[String: Any]] = []
     var refreshControl = UIRefreshControl()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -99,6 +98,26 @@ class PhotosViewController: UIViewController,UITableViewDataSource, UITableViewD
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+       
+        let cell = sender as! UITableViewCell
+        if let indexPath = tableView.indexPath(for: cell) {
+            let post = posts[indexPath.row]
+            let photos = post["photos"] as? [[String: Any]]
+            let photo = photos![0]
+            let originalSize = photo["original_size"] as! [String: Any]
+            let urlString = originalSize["url"] as! String
+            let vc = segue.destination as! PhotoDetailsViewController
+            vc.imageUrl = urlString
+        }
+        
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     
 
     /*
