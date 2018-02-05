@@ -15,13 +15,14 @@ class PhotoDetailsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let url = URL(string: imageUrl)
         
-        var url = URL(string: imageUrl)
         imageDetailView.af_setImage(withURL: url!)
         // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
+    
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
